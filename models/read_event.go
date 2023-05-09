@@ -18,14 +18,14 @@ type ParsedJson struct {
 }
 
 type SuiEventResponse struct {
-	Id                EventId    `json:"id"`
-	PackageId         string     `json:"packageId"`
-	TransactionModule string     `json:"transactionModule"`
-	Sender            string     `json:"sender"`
-	Type              string     `json:"type"`
-	ParsedJson        ParsedJson `json:"parsedJson"`
-	Bcs               string     `json:"bcs"`
-	TimestampMs       string     `json:"timestampMs"`
+	Id                EventId `json:"id"`
+	PackageId         string  `json:"packageId"`
+	TransactionModule string  `json:"transactionModule"`
+	Sender            string  `json:"sender"`
+	Type              string  `json:"type"`
+	ParsedJson        any     `json:"parsedJson"`
+	Bcs               string  `json:"bcs"`
+	TimestampMs       string  `json:"timestampMs"`
 }
 
 type GetEventsResponse []*SuiEventResponse

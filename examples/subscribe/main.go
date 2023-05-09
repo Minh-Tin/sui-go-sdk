@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+
 	"github.com/block-vision/sui-go-sdk/constant"
 	"github.com/block-vision/sui-go-sdk/models"
 	"github.com/block-vision/sui-go-sdk/sui"
@@ -10,18 +11,32 @@ import (
 
 func main() {
 	go SubscribeEvent()
-	go SubscribeTransaction()
+	//go SubscribeTransaction()
 	select {}
 }
 
 func SubscribeEvent() {
 	var ctx = context.Background()
-	var cli = sui.NewSuiWebsocketClient(constant.WssBvTestnetEndpoint)
+	var cli = sui.NewSuiWebsocketClient(constant.WssBvMainnetEndpoint)
 
 	receiveMsgCh := make(chan models.SuiEventResponse, 10)
 	err := cli.SubscribeEvent(ctx, models.SuiXSubscribeEventsRequest{
+		//message := `{"jsonrpc":"2.0", "id": "sub_` + uuid.New().String() + `", "method": "suix_subscribeEvent", "params": [{"MoveEventType": "0xd5dd28cc24009752905689b2ba2bf90bfc8de4549b9123f93519bb8ba9bf9981::marketplace::ListingEvent"},{"MoveEventType": "0xd5dd28cc24009752905689b2ba2bf90bfc8de4549b9123f93519bb8ba9bf9981::marketplace::ChangePriceEvent"}]}`
 		SuiEventFilter: map[string]interface{}{
-			"All": []string{},
+			"Or": []interface{}{
+				map[string]interface{}{
+					//"EventType": "MoveEvent",
+					//"Package":       "0xd5dd28cc24009752905689b2ba2bf90bfc8de4549b9123f93519bb8ba9bf9981",
+					"MoveEventType": "0xd5dd28cc24009752905689b2ba2bf90bfc8de4549b9123f93519bb8ba9bf9981::marketplace::ListingEvent",
+					//"MoveModule": "marketplace",
+				},
+				map[string]interface{}{
+					//"EventType": "MoveEvent",
+					//"Package":       "0xd5dd28cc24009752905689b2ba2bf90bfc8de4549b9123f93519bb8ba9bf9981",
+					"MoveEventType": "0xd5dd28cc24009752905689b2ba2bf90bfc8de4549b9123f93519bb8ba9bf9981::marketplace::ChangePriceEvent",
+					//"MoveModule": "marketplace",
+				},
+			},
 		},
 	}, receiveMsgCh)
 	if err != nil {
