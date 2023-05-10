@@ -3,14 +3,15 @@ package sui
 import (
 	"context"
 	"encoding/json"
+	"log"
+
 	"github.com/block-vision/sui-go-sdk/common/wsconn"
 	"github.com/block-vision/sui-go-sdk/models"
 	"github.com/tidwall/gjson"
-	"log"
 )
 
 type ISubscribeAPI interface {
-	SubscribeEvent(ctx context.Context, req models.SuiXSubscribeEventsRequest, msgCh chan models.SuiEventResponse) error
+	SubscribeEvent(ctx context.Context, cancel context.CancelFunc, req models.SuiXSubscribeEventsRequest, msgCh chan models.SuiEventResponse) error
 	SubscribeTransaction(ctx context.Context, req models.SuiXSubscribeTransactionsRequest, msgCh chan models.SuiEffects) error
 }
 
@@ -32,6 +33,7 @@ func (s *suiSubscribeImpl) SubscribeEvent(ctx context.Context, req models.SuiXSu
 	}
 
 	go func() {
+
 		for {
 			select {
 			case messageData := <-rsp:

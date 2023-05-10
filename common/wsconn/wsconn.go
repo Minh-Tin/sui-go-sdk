@@ -4,11 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
+	"time"
+
 	"github.com/block-vision/sui-go-sdk/models"
 	"github.com/gorilla/websocket"
 	"github.com/tidwall/gjson"
-	"log"
-	"time"
 )
 
 type WsConn struct {
@@ -35,7 +36,7 @@ func NewWsConn(wsUrl string) *WsConn {
 	}
 }
 
-func (w *WsConn) Call(ctx context.Context, op CallOp, receiveMsgCh chan []byte) error {
+func (w *WsConn) Call(ctx context.Context, cancel context.CancelFunc, op CallOp, receiveMsgCh chan []byte) error {
 	jsonRPCCall := models.JsonRPCRequest{
 		JsonRPC: "2.0",
 		ID:      time.Now().UnixMilli(),
@@ -71,6 +72,7 @@ func (w *WsConn) Call(ctx context.Context, op CallOp, receiveMsgCh chan []byte) 
 	fmt.Printf("establish successfully, subscriptionID: %d, Waiting to accept data...\n", rsp.Result)
 
 	go func(conn *websocket.Conn) {
+		defer cancel()
 		for {
 			messageType, messageData, err := conn.ReadMessage()
 			if nil != err {

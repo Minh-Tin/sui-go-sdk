@@ -16,27 +16,21 @@ func main() {
 }
 
 func SubscribeEvent() {
-	var ctx = context.Background()
-	var cli = sui.NewSuiWebsocketClient(constant.WssBvMainnetEndpoint)
+	var ctx, cancel = context.WithCancel(context.Background())
+	var cli = sui.NewSuiWebsocketClient("ws://192.168.1.40:9990")
 
 	receiveMsgCh := make(chan models.SuiEventResponse, 10)
-	err := cli.SubscribeEvent(ctx, models.SuiXSubscribeEventsRequest{
-		//message := `{"jsonrpc":"2.0", "id": "sub_` + uuid.New().String() + `", "method": "suix_subscribeEvent", "params": [{"MoveEventType": "0xd5dd28cc24009752905689b2ba2bf90bfc8de4549b9123f93519bb8ba9bf9981::marketplace::ListingEvent"},{"MoveEventType": "0xd5dd28cc24009752905689b2ba2bf90bfc8de4549b9123f93519bb8ba9bf9981::marketplace::ChangePriceEvent"}]}`
+	err := cli.SubscribeEvent(ctx, cancel, models.SuiXSubscribeEventsRequest{
 		SuiEventFilter: map[string]interface{}{
-			"Or": []interface{}{
-				map[string]interface{}{
-					//"EventType": "MoveEvent",
-					//"Package":       "0xd5dd28cc24009752905689b2ba2bf90bfc8de4549b9123f93519bb8ba9bf9981",
-					"MoveEventType": "0xd5dd28cc24009752905689b2ba2bf90bfc8de4549b9123f93519bb8ba9bf9981::marketplace::ListingEvent",
-					//"MoveModule": "marketplace",
-				},
-				map[string]interface{}{
-					//"EventType": "MoveEvent",
-					//"Package":       "0xd5dd28cc24009752905689b2ba2bf90bfc8de4549b9123f93519bb8ba9bf9981",
-					"MoveEventType": "0xd5dd28cc24009752905689b2ba2bf90bfc8de4549b9123f93519bb8ba9bf9981::marketplace::ChangePriceEvent",
-					//"MoveModule": "marketplace",
-				},
-			},
+			"All": []string{},
+			//"Or": []interface{}{
+			//	map[string]interface{}{
+			//		"MoveEventType": "0xd5dd28cc24009752905689b2ba2bf90bfc8de4549b9123f93519bb8ba9bf9981::marketplace::ListingEvent",
+			//	},
+			//	map[string]interface{}{
+			//		"MoveEventType": "0xd5dd28cc24009752905689b2ba2bf90bfc8de4549b9123f93519bb8ba9bf9981::marketplace::ChangePriceEvent",
+			//	},
+			//},
 		},
 	}, receiveMsgCh)
 	if err != nil {

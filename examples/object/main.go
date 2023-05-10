@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+
 	"github.com/block-vision/sui-go-sdk/constant"
 	"github.com/block-vision/sui-go-sdk/models"
 	"github.com/block-vision/sui-go-sdk/sui"
@@ -10,11 +11,12 @@ import (
 )
 
 var ctx = context.Background()
-var cli = sui.NewSuiClient(constant.BvTestnetEndpoint)
+var cli = sui.NewSuiClient(constant.BvMainnetEndpoint)
 
 func main() {
 	SuiGetObject()
-	SuiXGetOwnedObjects()
+	//SuiXGetOwnedObjects()
+	return
 	SuiMultiGetObjects()
 	SuiXGetDynamicField()
 	SuiTryGetPastObject()
@@ -23,7 +25,7 @@ func main() {
 
 func SuiGetObject() {
 	rsp, err := cli.SuiGetObject(ctx, models.SuiGetObjectRequest{
-		ObjectId: "0xeeb964d1e640219c8ddb791cc8548f3242a3392b143ff47484a3753291cad898",
+		ObjectId: "0x4de3bf06892a322795846c2d3d364a8032d8ba2a2d54a1422d749dc0fa272386",
 		Options: models.SuiObjectDataOptions{
 			ShowContent:             true,
 			ShowDisplay:             true,
@@ -47,7 +49,7 @@ func SuiGetObject() {
 func SuiXGetOwnedObjects() {
 	suiObjectResponseQuery := models.SuiObjectResponseQuery{
 		Filter: models.ObjectFilterByPackage{
-			Package: "0x0b2041bdc2b1f9c5ff4bafc5883e6f48dd1dc81a1d4d2392d3d4c8e02bb4dd82",
+			Package: "0xee496a0cc04d06a345982ba6697c90c619020de9e274408c7819f787ff66e1a1",
 		},
 		Options: models.SuiObjectDataOptions{
 			ShowType:                true,
