@@ -20,9 +20,9 @@ type suiSubscribeImpl struct {
 }
 
 // SubscribeEvent implements the method `suix_subscribeEvent`, subscribe to a stream of Sui event.
-func (s *suiSubscribeImpl) SubscribeEvent(ctx context.Context, req models.SuiXSubscribeEventsRequest, msgCh chan models.SuiEventResponse) error {
+func (s *suiSubscribeImpl) SubscribeEvent(ctx context.Context, cancel context.CancelFunc, req models.SuiXSubscribeEventsRequest, msgCh chan models.SuiEventResponse) error {
 	rsp := make(chan []byte, 10)
-	err := s.conn.Call(ctx, wsconn.CallOp{
+	err := s.conn.Call(ctx, cancel, wsconn.CallOp{
 		Method: "suix_subscribeEvent",
 		Params: []interface{}{
 			req.SuiEventFilter,
@@ -56,9 +56,10 @@ func (s *suiSubscribeImpl) SubscribeEvent(ctx context.Context, req models.SuiXSu
 }
 
 // SubscribeTransaction implements the method `suix_subscribeTransaction`, subscribe to a stream of Sui transaction effects.
-func (s *suiSubscribeImpl) SubscribeTransaction(ctx context.Context, req models.SuiXSubscribeTransactionsRequest, msgCh chan models.SuiEffects) error {
+func (s *suiSubscribeImpl) SubscribeTransaction(ctx context.Context, cancel context.CancelFunc, req models.SuiXSubscribeTransactionsRequest, msgCh chan models.SuiEffects) error {
 	rsp := make(chan []byte, 10)
-	err := s.conn.Call(ctx, wsconn.CallOp{
+
+	err := s.conn.Call(ctx, cancel, wsconn.CallOp{
 		Method: "suix_subscribeTransaction",
 		Params: []interface{}{
 			req.TransactionFilter,
