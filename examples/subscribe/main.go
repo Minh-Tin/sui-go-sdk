@@ -48,11 +48,11 @@ func SubscribeEvent() {
 }
 
 func SubscribeTransaction() {
-	var ctx = context.Background()
+	var ctx, cancel = context.WithCancel(context.Background())
 	var cli = sui.NewSuiWebsocketClient(constant.WssBvTestnetEndpoint)
 
 	receiveMsgCh := make(chan models.SuiEffects, 10)
-	err := cli.SubscribeTransaction(ctx, models.SuiXSubscribeTransactionsRequest{
+	err := cli.SubscribeTransaction(ctx, cancel, models.SuiXSubscribeTransactionsRequest{
 		TransactionFilter: models.TransactionFilterByFromAddress{
 			FromAddress: "0x0000000000000000000000000000000000000000000000000000000000000000",
 		},

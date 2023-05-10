@@ -12,7 +12,7 @@ import (
 
 type ISubscribeAPI interface {
 	SubscribeEvent(ctx context.Context, cancel context.CancelFunc, req models.SuiXSubscribeEventsRequest, msgCh chan models.SuiEventResponse) error
-	SubscribeTransaction(ctx context.Context, req models.SuiXSubscribeTransactionsRequest, msgCh chan models.SuiEffects) error
+	SubscribeTransaction(ctx context.Context, cancel context.CancelFunc, req models.SuiXSubscribeTransactionsRequest, msgCh chan models.SuiEffects) error
 }
 
 type suiSubscribeImpl struct {
